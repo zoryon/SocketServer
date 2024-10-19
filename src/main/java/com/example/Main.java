@@ -13,7 +13,7 @@ public class Main {
             Socket s = server.accept();
             System.out.println("Un client si è collegato!");
 
-            MyThread t = new MyThread(s);
+            ClientHandler t = new ClientHandler(s);
             t.start();
         } while (true);
     }

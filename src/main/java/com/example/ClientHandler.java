@@ -8,10 +8,10 @@ import java.net.Socket;
 
 import com.example.lib.ResponseMessages;
 
-public class MyThread extends Thread {
+public class ClientHandler extends Thread {
     Socket s;
 
-    public MyThread(Socket s) {
+    public ClientHandler(Socket s) {
         this.s = s;
     }
 
@@ -27,7 +27,6 @@ public class MyThread extends Thread {
                 switch (choice) {
                     case 0:
                         System.out.println("Connessione chiusa.");
-                        s.close();
                         break;
                     case 1:
                         sendRes(out, catchReq(in).toUpperCase());
@@ -42,7 +41,7 @@ public class MyThread extends Thread {
                         sendRes(out, Integer.toString(catchReq(in).length()));
                         break;
                     default:
-                        sendRes(out, "Scelta non valida, riprovare perfavore.");
+                        sendRes(out, ResponseMessages.getDEFAULT_CHOICE());
                         break;
                 }
             } while (choice != 0);
@@ -60,10 +59,10 @@ public class MyThread extends Thread {
 
             try {
                 Integer.parseInt(ans);
-                out.writeBytes(ResponseMessages.getOk() + "\n");
+                out.writeBytes(ResponseMessages.getOk() + newLine());
                 err = false;
             } catch (Exception e) {
-                out.writeBytes(ResponseMessages.getInvalidChoice() + "\n");
+                out.writeBytes(ResponseMessages.getINVALID_CHOICE() + newLine());
                 err = true;
             }
         } while (err);
@@ -71,11 +70,15 @@ public class MyThread extends Thread {
         return Integer.parseInt(ans);
     }
 
+    public static String newLine() {
+        return "\n";
+    }
+
     public static String catchReq(BufferedReader in) throws IOException {
         return in.readLine();
     }
 
     public static void sendRes(DataOutputStream out, String ans) throws IOException {
-        out.writeBytes(ans + "\n");
+        out.writeBytes(ans + newLine());
     }
 }
